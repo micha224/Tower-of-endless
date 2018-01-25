@@ -21,10 +21,13 @@ CreatePlayer <- function()
     Name = "",
     Level = 1,
     HP = 20,
+    MaxHP = 20,
     AC = 10,
     Initiative = 2,
     TempInit = 0,
     aDice = 1,
+    Experience=0,
+    Gold = 0,
     nDice = 4
   )
   
@@ -61,7 +64,7 @@ while(1==1)
   #newgame/Town - 1
   if(gamestate == 1)
   {
-    cat("You entered the town in front of the Tower.\nE - Enter Tower.\nS - Go to shop.\nT - Go to the Dojo.\nQ1 - Returning to main menu.\nQ2 - Quit.\n");
+    cat("You entered the town in front of the Tower.\nE - Enter Tower.\nS - Go to shop.\nT - Go to the Dojo.\nC - Go to the temple.\nQ1 - Returning to main menu.\nQ2 - Quit.\n");
     input <- readline();
     
     switch(input,
@@ -72,6 +75,9 @@ while(1==1)
            S={},
            T={},
            D={},
+           C={
+             gamestate <- 6;
+           },
            Q1={
              cat("Returning to main menu.\n");
              gamestate <- 0;
@@ -103,6 +109,9 @@ while(1==1)
       monsters[[i]]$Initiative = monsterdata$Initiative[rndnumbers[i]];
       monsters[[i]]$aDice = monsterdata$aDice[rndnumbers[i]]+4;
       monsters[[i]]$nDice = monsterdata$nDice[rndnumbers[i]];
+      monsters[[i]]$Experience = monsterdata$Experience[rndnumbers[i]];
+      monsters[[i]]$Gold = monsterdata$Gold[rndnumbers[i]];
+      
       
       cat("[",i,"] ", monsters[[i]]$Name, " Lv.", monsters[[i]]$Level, "\t");
     }
@@ -154,7 +163,7 @@ while(1==1)
       #one Round
       for(t in 1:length(order))
       {
-        if (is.null(player)N)
+        if (is.null(player) || gamestate != 3)
         {
           break;
         }
@@ -178,6 +187,8 @@ while(1==1)
                      if (monsters[[input]]$HP <= 0)
                      {
                        cat("[", input,"] ", monsters[[input]]$Name," died.\n");
+                       player$Experience <- player$Experience + monsters[[input]]$Experience;
+                       player$Gold <- player$Gold + monsters[[input]]$Gold;
                        monsters[[input]] <- NULL;
                        if(length(monsters) ==0)
                        {
@@ -193,6 +204,7 @@ while(1==1)
                  X={
                    cat("You flee and succesfully reached town.\n");
                    gamestate <- 1;
+                   break;
                    }
                  );
         }
@@ -247,4 +259,66 @@ while(1==1)
   #Shop - 4
   
   #Dojo - 5
+  #Temple - 6
+  if(gamestate == 6)
+  {
+    cat("You went to the temple to check your health.\n\nWhen the priests looks at you, he tells you:\n",
+        "Name: ", player$Name,"\n",
+        "HP: ", player$HP,"/",player$MaxHP,"\n",
+        "Level: ", player$Level,"\n",
+        "Armor Class: ", player$AC, "\n",
+        "Attack: ", player$aDice, "x", player$nDice, "\n",
+        "Gold: ", player$Gold, "\n\n",
+        "Would you want to HEAL (Z) or LEVEL UP (X) or go back to town (Q).\n");
+    input <- readline();
+    switch(input,
+           Z={
+             if(player$HP < player$MaxHP)
+             {
+               goldcost <- 1 * (player$MaxHP-player$HP);
+               cat("The priester can heal you with a blessing.\n","(Q) Go back, (Z) 1Hp for 1gp or (A) max HP for ", goldcost,"\n");
+               input <- readline();
+               switch(input,
+                      Z={
+                        if(player$HP < player$MaxHP)
+                        {
+                          player$HP <- player$HP +1;
+                          player$Gold <- player$Gold - 1;
+                        }
+                        gamestate <- 6;
+                      },
+                      A={
+                        player$Gold <- player$Gold - goldcost;
+                        player$HP <- player$MaxHP;
+                        gamestate <- 6;
+                      },
+                      Q={
+                        cat("You go back to town.\n");
+                        gamestate<-1;
+                      }
+                      );
+             }
+             else
+             {
+               cat("You are at full health.\n");
+             }
+           },
+           X={
+             if(player$Experience >= 1.5*player$Level)
+             {
+               player$Level <- player$Level + 1;
+               cat("You leveled up from ", player$Level-1, " to ", player$Level, "\n");
+               gamestate <- 6;
+             }
+             else
+             {
+               cat("You don't have enough experience.\n");
+               gamestate <- 6;
+             }
+           },
+           Q={
+             cat("You go back to the town.\n");
+             gamestate <- 1;
+           });
+  }
 }

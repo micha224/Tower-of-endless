@@ -1,2 +1,2 @@
-Name,Level,Hp,aDice,nDice,AC,Initiative
-KoboldTest,1,12,4,1,10,2
+Name,Level,Hp,aDice,nDice,AC,Initiative,Experience,Gold
+KoboldTest,1,12,4,1,10,2,10,3
