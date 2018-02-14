@@ -1,2 +1,3 @@
 Name,Level,Hp,aDice,nDice,AC,Initiative,Experience,Gold
 KoboldTest,1,12,4,1,10,2,10,3
+Cult member,1,8,6,1,8,4,12,5

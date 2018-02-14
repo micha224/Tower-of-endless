@@ -1,9 +1,9 @@
 #tower of monsters in R
-setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path));
 # libraries
 library(Rdice);
-library(ggplot2)
-library(gganimate)
+library(ggplot2);
+#library(gganimate)
 
 
 test <- read.csv("test.csv", sep = ",");
@@ -98,7 +98,7 @@ while(1==1)
     
     #creating monsters
     monsters <- vector("list", as.integer(amount_of_monsters$results));
-    rndnumbers <- floor(runif(as.integer(amount_of_monsters$results), min=1, max=nrow(monsterdata)));
+    rndnumbers <- floor(runif(as.integer(amount_of_monsters$results), min=1, max=nrow(monsterdata)+1));
     for(i in 1:as.integer(amount_of_monsters$results))
     {
       monsters[[i]] <- CreatePlayer();
