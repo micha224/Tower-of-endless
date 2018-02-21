@@ -11,9 +11,8 @@ test <- read.csv("test.csv", sep = ",");
 gamestate <- 0;
 
 
-#mm <- ggplot(test, aes(y=y, x=x, frame=x)) + geom_path(aes(cumulative = TRUE)) + annotate(geom="text", x=25, y=50, label="The Endless Tower", size=13,
-#         color="red");
-
+mm <- ggplot(test, aes(y=y, x=x, frame=x)) + geom_path(aes(cumulative = TRUE)) + annotate(geom="text", x=25, y=50, label="The Endless Tower", size=13,
+         color="red");
 
 CreatePlayer <- function()
 {
@@ -42,7 +41,7 @@ while(1==1)
   {
     cat("Welcome to the endless tower!\npress N for new game or Q to quit.\n");
     #plot(c(1,2),c(1,3));
-    
+    print(mm);
     input <- readline();
     
     switch(input,
